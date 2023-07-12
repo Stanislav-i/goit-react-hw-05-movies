@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {Link} from 'react-router-dom';
 
 const Home = () => {
     const [trendingMovies, setTrendingMovies] = useState([]);
@@ -19,9 +20,12 @@ const Home = () => {
     return (
       <div>
         <ul>
-          {trendingMovies && trendingMovies.map(({ id, original_title }) => (
-            <li key={id}>{original_title}</li>
-          ))}
+          {trendingMovies &&
+            trendingMovies.map(({ id, original_title }) => (
+              <Link key={id} to={`/movies/${id}`}>
+                <li>{original_title}</li>
+              </Link>
+            ))}
         </ul>
       </div>
     );
