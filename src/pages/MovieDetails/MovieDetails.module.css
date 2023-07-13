@@ -1,0 +1,61 @@
+.movieInfo {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding-left: 25px;
+}
+
+.infoList {
+display: flex;
+flex-direction: row;
+    gap: 10px;
+}
+
+.title {
+    padding-bottom: 10px;
+}
+
+.score {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.overview {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.genres {
+        padding-top: 10px;
+        padding-bottom: 5px;
+    }
+
+.addInfoContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 25px;
+    gap: 15px;
+}
+
+.link {
+    color: rgb(0, 0, 0);
+}
+
+.linkContainer {
+    display: block;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.button {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 25px;
+}
+
+.addInfo {
+    padding-top: 25px;
+    padding-left: 25px;
+    padding-bottom: 10px;
+}
