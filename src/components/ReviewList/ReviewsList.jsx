@@ -6,7 +6,7 @@ import { ProgressBar } from 'react-loader-spinner';
 const Reviews = ({ movieId }) => {
   const [reviewList, setReviewList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState('');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMovieReviews = async () => {
@@ -15,13 +15,13 @@ const Reviews = ({ movieId }) => {
         await fetchReviewData(movieId).then(reviews => {
           const newReviewList = reviews.results;
           if (newReviewList.length === 0) {
-            alert('No reviews found');
+            return
           }
           setReviewList(reviews.results);
         });
       } catch (error) {
         console.log(error.message);
-        //  setError(error.message);
+         setError(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -54,7 +54,9 @@ const Reviews = ({ movieId }) => {
         />
       )}
 
-      {reviewList.length > 0 && (
+      {error !== null && (<p>Error occured! Error is {error}</p>)}
+
+      {reviewList.length > 0 ? (
         <ul>
           {reviewList.map(({ author, content, id }) => (
             <li className={css.item} key={id}>
@@ -63,7 +65,19 @@ const Reviews = ({ movieId }) => {
             </li>
           ))}
         </ul>
-      )}
+      ) : (<p>Ooops!</p>)
+    }
+
+      {/* {reviewList.length > 0 && (
+        <ul>
+          {reviewList.map(({ author, content, id }) => (
+            <li className={css.item} key={id}>
+              <h3 className={css.title}>{author}</h3>
+              <p>{content}</p>
+            </li>
+          ))}
+        </ul>
+      )} */}
     </div>
   );
 };

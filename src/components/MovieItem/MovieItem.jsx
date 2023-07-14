@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
-import css from './TrandingMovieItem.module.css'
+import css from './MovieItem.module.css'
 
-const TrandingMovieItem = ({id, title, poster}) => {
+const MovieItem = ({id, title, poster}) => {
     return (
     //   <div className={css.trendingContainer}>
         <Link className={css.trendingContainer} to={`/movies/${id}`}>
           <div className={css.imageThumb}>
-            <img
+          <img
+            className={css.poster}
               src={`https://image.tmdb.org/t/p/w500${poster}`}
               alt="movie poster"
             />
@@ -19,4 +20,4 @@ const TrandingMovieItem = ({id, title, poster}) => {
     );
 };
 
-export default TrandingMovieItem;
+export default MovieItem;

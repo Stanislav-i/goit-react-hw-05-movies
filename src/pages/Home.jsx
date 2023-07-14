@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 import { fetchTrendingData } from 'Services/api';
-import TrandingMovieItem from 'components/TrandingMovieItem/TrandingMovieItem';
+import MovieItem from 'components/MovieItem/MovieItem';
 import { ProgressBar } from 'react-loader-spinner';
 
 const Home = () => {
@@ -16,7 +16,7 @@ const Home = () => {
       try {
         setIsLoading(true);
         await fetchTrendingData().then(data => {
-          console.log(data)
+          // console.log(data)
           setTrendingMovies(data.results)
         });
       } catch (error) {
@@ -64,11 +64,11 @@ const Home = () => {
               Error is: {error}
             </p>
           ) : (
-            trendingMovies.map(({ id, original_title, backdrop_path }) => (
-              <TrandingMovieItem
+            trendingMovies.map(({ id, title, backdrop_path }) => (
+              <MovieItem
                 key={id}
                 id={id}
-                title={original_title}
+                title={title}
                 poster={backdrop_path}
               />
             ))

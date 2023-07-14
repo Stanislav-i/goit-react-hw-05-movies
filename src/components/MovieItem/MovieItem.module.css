@@ -18,8 +18,14 @@
 
 .imageThumb {
     height: auto;
-    overflow: hidden;
-    width: 200px;
+    /* overflow: hidden; */
+    max-width: 200px;
+    /* margin: 0 auto; */
+}
+
+.poster {
+    display: block;
+    width: 100%;
 }
 
 .title {
