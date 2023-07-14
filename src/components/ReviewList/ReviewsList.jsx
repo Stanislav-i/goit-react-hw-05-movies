@@ -1,23 +1,31 @@
 import { useState, useEffect } from 'react';
 import { fetchReviewData } from 'Services/api';
-import css from './ReviewList.module.css'
+import css from './ReviewList.module.css';
+import { ProgressBar } from 'react-loader-spinner';
 
 const Reviews = ({ movieId }) => {
-  const [reviewList, setreviewList] = useState([]);
+  const [reviewList, setReviewList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState('');
-
 
   useEffect(() => {
     const fetchMovieReviews = async () => {
       try {
-        await fetchReviewData(movieId).then(reviews => setreviewList(reviews.results))
-        
+        setIsLoading(true);
+        await fetchReviewData(movieId).then(reviews => {
+          const newReviewList = reviews.results;
+          if (newReviewList.length === 0) {
+            alert('No reviews found');
+          }
+          setReviewList(reviews.results);
+        });
       } catch (error) {
         console.log(error.message);
         //  setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
-
-    }
+    };
 
     // async function fetchMovieReviews() {
     //   await fetch(
@@ -31,22 +39,31 @@ const Reviews = ({ movieId }) => {
 
     fetchMovieReviews();
   }, [movieId]);
-  
+
   return (
     <div className={css.container}>
-      <ul>
-      {reviewList.length > 0 ? (
-          reviewList.map(({ author, content, id }) => (
+      {isLoading && (
+        <ProgressBar
+          height="80"
+          width="80"
+          ariaLabel="progress-bar-loading"
+          wrapperStyle={{}}
+          wrapperClass="progress-bar-wrapper"
+          borderColor="#F4442E"
+          barColor="#51E5FF"
+        />
+      )}
+
+      {reviewList.length > 0 && (
+        <ul>
+          {reviewList.map(({ author, content, id }) => (
             <li className={css.item} key={id}>
               <h3 className={css.title}>{author}</h3>
               <p>{content}</p>
             </li>
-          ))
-        
-      ) : (
-        <p>Sorry, but there are no reviews yet!</p>
-        )}
+          ))}
         </ul>
+      )}
     </div>
   );
 };

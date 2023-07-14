@@ -2,16 +2,19 @@ import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 import { fetchTrendingData } from 'Services/api';
 import TrandingMovieItem from 'components/TrandingMovieItem/TrandingMovieItem';
+import { ProgressBar } from 'react-loader-spinner';
 
 const Home = () => {
   const [trendingMovies, setTrendingMovies] = useState([]);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
     
   useEffect(() => {
     
 
     const fetchTrendingMovies = async () => {
       try {
+        setIsLoading(true);
         await fetchTrendingData().then(data => {
           console.log(data)
           setTrendingMovies(data.results)
@@ -19,7 +22,9 @@ const Home = () => {
       } catch (error) {
         console.log(error.message)
         setError(error.message);
-      }
+      } finally {
+        setIsLoading(false);
+       }
     }
 
     fetchTrendingMovies();
@@ -38,6 +43,19 @@ const Home = () => {
         >
           Trending Today
         </h1>
+
+        {isLoading && (
+          <ProgressBar
+            height="80"
+            width="80"
+            ariaLabel="progress-bar-loading"
+            wrapperStyle={{}}
+            wrapperClass="progress-bar-wrapper"
+            borderColor="#F4442E"
+            barColor="#51E5FF"
+          />
+        )}
+
         <ul>
           {error ? (
             <p>

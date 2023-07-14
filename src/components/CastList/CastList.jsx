@@ -1,18 +1,23 @@
 import { useState, useEffect } from 'react';
 import { fetchCastData } from 'Services/api';
-import css from './CastList.module.css'
+import css from './CastList.module.css';
+import { ProgressBar } from 'react-loader-spinner';
 
 const CastList = ({ movieId }) => {
   const [castList, setCastList] = useState([]);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchMovieCast = async () => {
       try {
+        setIsLoading(true);
         await fetchCastData(movieId).then(cast => setCastList(cast.cast));
       } catch (error) {
         console.log(error.message);
         setError(error.message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -31,6 +36,19 @@ const CastList = ({ movieId }) => {
 
   return (
     <div className={css.castContainer}>
+      
+      {isLoading && (
+        <ProgressBar
+          height="80"
+          width="80"
+          ariaLabel="progress-bar-loading"
+          wrapperStyle={{}}
+          wrapperClass="progress-bar-wrapper"
+          borderColor="#F4442E"
+          barColor="#51E5FF"
+        />
+      )}
+
       <ul>
         {error ? (
           <p>

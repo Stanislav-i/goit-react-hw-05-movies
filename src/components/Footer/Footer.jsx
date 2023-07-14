@@ -12,9 +12,6 @@ const Footer = () => {
           <span></span>
           <span></span>
         </div>
-            <div>
-                <p>Developed by GoIT Student Stanislav Izotov</p>
-        </div>
       </div>
     );
 }

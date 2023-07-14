@@ -4,6 +4,7 @@ import CastList from 'components/CastList/CastList';
 import ReviewsList from 'components/ReviewList/ReviewsList';
 import { fetchMovieData } from 'Services/api';
 import css from './MovieDetails.module.css';
+import { ProgressBar } from 'react-loader-spinner';
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -13,10 +14,12 @@ const MovieDetails = () => {
   const [overview, setOverview] = useState('');
   const [genres, setGenres] = useState([]);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
+        setIsLoading(true);
         await fetchMovieData(id).then(data => {
           setMovieTitle(data.title);
           setMoviePoster(data.poster_path);
@@ -27,7 +30,9 @@ const MovieDetails = () => {
       } catch (error) {
         console.log(error.message);
         setError(error.message);
-      }
+      } finally {
+        setIsLoading(false);
+       }
     };
 
     // async function fetchMovieDetails(movieId) {
@@ -52,6 +57,18 @@ const MovieDetails = () => {
   return (
     <div>
       <button className={css.button}>Go Back</button>
+
+              {isLoading && (
+          <ProgressBar
+            height="80"
+            width="80"
+            ariaLabel="progress-bar-loading"
+            wrapperStyle={{}}
+            wrapperClass="progress-bar-wrapper"
+            borderColor="#F4442E"
+            barColor="#51E5FF"
+          />
+        )}
 
       {error ? (
         <p>
