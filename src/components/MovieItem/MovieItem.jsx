@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import css from './MovieItem.module.css';
 
 const PH_IMAGE =
@@ -27,6 +28,12 @@ const MovieItem = ({ id, title, poster }) => {
     </Link>
     //   </div>
   );
+};
+
+MovieItem.propTypes = {
+  id: PropTypes.number,
+  title: PropTypes.string,
+  poster: PropTypes.string,
 };
 
 export default MovieItem;

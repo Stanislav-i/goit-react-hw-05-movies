@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { fetchCastData } from 'Services/api';
 import css from './CastList.module.css';
 
@@ -52,5 +53,10 @@ const CastList = ({ movieId }) => {
     </div>
   );
 };
+
+CastList.propTypes = {
+  id: PropTypes.string,
+};
+
 
 export default CastList;

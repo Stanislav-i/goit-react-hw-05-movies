@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { fetchReviewData } from 'Services/api';
 import css from './ReviewList.module.css';
 
@@ -51,6 +52,11 @@ const Reviews = ({ movieId }) => {
       )}
     </div>
   );
+};
+
+Reviews.propTypes = {
+  id: PropTypes.string,
+
 };
 
 export default Reviews;
