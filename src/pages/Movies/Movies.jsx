@@ -1,49 +1,57 @@
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { ProgressBar } from 'react-loader-spinner';
-import { fetchSearchedData } from "Services/api";
-import MovieItem from "components/MovieItem/MovieItem";
+import { fetchSearchedData } from 'Services/api';
+import MovieItem from 'components/MovieItem/MovieItem';
 import css from './Movies.module.css';
 
 const Movies = () => {
   const [searchedMovies, setSearchedMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [searchParams, setSearchParams] = useSearchParams();
-  const movieName = searchParams.get('query')
 
-  const handleSubmit = (e) => { 
+  const [falseSearch, setFalseSearch] = useState(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const movieName = searchParams.get('query');
+
+  const handleSubmit = e => {
     e.preventDefault();
 
     const searchQuery = e.target.elements.searchInput.value;
-    
+
     setSearchParams({
       query: searchQuery,
     });
 
     e.currentTarget.reset();
-  }
+  };
 
-    useEffect(() => {
-      if (!movieName) return;
+  useEffect(() => {
+    if (!movieName) return;
 
-      const fetchSearchedMovies = async () => {
-        try {
-          setIsLoading(true);
-          await fetchSearchedData(movieName).then(data => {
-            console.log(data);
-            setSearchedMovies(data.results);
-          });
-        } catch (error) {
-          console.log(error.message);
-          setError(error.message);
-        } finally {
-          setIsLoading(false);
-        }
-      };
+    const fetchSearchedMovies = async () => {
+      try {
+        setIsLoading(true);
+        await fetchSearchedData(movieName).then(data => {
+          if (data.results.length === 0) {
+            setSearchedMovies([]);
+            setFalseSearch(true);
+            return;
+          }
+          setFalseSearch(false);
+          setSearchedMovies(data.results);
+        });
+      } catch (error) {
+        console.log(error.message);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-      fetchSearchedMovies();
-    }, [movieName]);
+    fetchSearchedMovies();
+  }, [movieName, falseSearch]);
 
   return (
     <div>
@@ -55,7 +63,9 @@ const Movies = () => {
           required
           minLength={3}
         />
-        <button type="submit">Search</button>
+        <button className={css.btn} type="submit">
+          Search
+        </button>
       </form>
 
       {isLoading && (
@@ -70,6 +80,8 @@ const Movies = () => {
         />
       )}
 
+      {falseSearch && <p>There are no movies matching your request!</p>}
+
       <ul>
         {error ? (
           <p>
@@ -79,12 +91,7 @@ const Movies = () => {
           </p>
         ) : (
           searchedMovies.map(({ id, title, backdrop_path }) => (
-            <MovieItem
-              key={id}
-              id={id}
-              title={title}
-              poster={backdrop_path}
-            />
+            <MovieItem key={id} id={id} title={title} poster={backdrop_path} />
           ))
         )}
       </ul>

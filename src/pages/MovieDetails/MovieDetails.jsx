@@ -1,10 +1,11 @@
-import { useParams, NavLink, Route, Routes } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import CastList from 'components/CastList/CastList';
-import ReviewsList from 'components/ReviewList/ReviewsList';
+import { useParams, Link, Route, Routes, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef, Suspense, lazy } from 'react';
 import { fetchMovieData } from 'Services/api';
-import css from './MovieDetails.module.css';
 import { ProgressBar } from 'react-loader-spinner';
+import css from './MovieDetails.module.css';
+
+const CastList = lazy(() => import('components/CastList/CastList'));
+const ReviewsList = lazy(() => import('components/ReviewList/ReviewsList'));
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -15,6 +16,8 @@ const MovieDetails = () => {
   const [genres, setGenres] = useState([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+  const previousLocation = useRef(location.state?.from ?? '/');
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -32,7 +35,7 @@ const MovieDetails = () => {
         setError(error.message);
       } finally {
         setIsLoading(false);
-       }
+      }
     };
 
     // async function fetchMovieDetails(movieId) {
@@ -56,19 +59,21 @@ const MovieDetails = () => {
 
   return (
     <div>
-      <button className={css.button}>Go Back</button>
+      <button className={css.button}>
+        <Link to={previousLocation.current}>Go Back</Link>
+      </button>
 
-              {isLoading && (
-          <ProgressBar
-            height="80"
-            width="80"
-            ariaLabel="progress-bar-loading"
-            wrapperStyle={{}}
-            wrapperClass="progress-bar-wrapper"
-            borderColor="#F4442E"
-            barColor="#51E5FF"
-          />
-        )}
+      {isLoading && (
+        <ProgressBar
+          height="80"
+          width="80"
+          ariaLabel="progress-bar-loading"
+          wrapperStyle={{}}
+          wrapperClass="progress-bar-wrapper"
+          borderColor="#F4442E"
+          barColor="#51E5FF"
+        />
+      )}
 
       {error ? (
         <p>
@@ -79,9 +84,20 @@ const MovieDetails = () => {
       ) : (
         <>
           <div className={css.movieInfo}>
+            {/* <div
+              style={{
+                width: '200px',
+                height: 'auto',
+                backgroundImage:
+                    `url(https://image.tmdb.org/t/p/w342${moviePoster})`,
+                  backgroundSize: 'contain',
+                  backgroundRepeat: 'no-repeat'
+              }}
+            ></div> */}
             <div className={css.imageThumb}>
-                <img className={css.image}
-                src={`https://image.tmdb.org/t/p/w500${moviePoster}`}
+              <img
+                className={css.image}
+                src={`https://image.tmdb.org/t/p/w342${moviePoster}`}
                 alt=""
               />
             </div>
@@ -102,24 +118,38 @@ const MovieDetails = () => {
 
           <div className={css.addInfoContainer}>
             <button className={css.linkContainer}>
-              <NavLink className={css.link} to="cast">
+              <Link className={css.link} to="cast">
                 Cast
-              </NavLink>
+              </Link>
             </button>
             <button className={css.linkContainer}>
-              <NavLink className={css.link} to="reviews">
+              <Link className={css.link} to="reviews">
                 Reviews
-              </NavLink>
+              </Link>
             </button>
           </div>
 
-          <Routes>
-            <Route path="cast" element={<CastList movieId={id} />}></Route>
-            <Route
-              path="reviews"
-              element={<ReviewsList movieId={id} />}
-            ></Route>
-          </Routes>
+          <Suspense
+            fallback={
+              <ProgressBar
+                height="80"
+                width="80"
+                ariaLabel="progress-bar-loading"
+                wrapperStyle={{}}
+                wrapperClass="progress-bar-wrapper"
+                borderColor="#F4442E"
+                barColor="#51E5FF"
+              />
+            }
+          >
+            <Routes>
+              <Route path="cast" element={<CastList movieId={id} />}></Route>
+              <Route
+                path="reviews"
+                element={<ReviewsList movieId={id} />}
+              ></Route>
+            </Routes>
+          </Suspense>
         </>
       )}
     </div>

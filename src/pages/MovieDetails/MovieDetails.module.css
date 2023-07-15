@@ -4,6 +4,7 @@
     flex-direction: row;
     gap: 10px;
     padding-left: 25px;
+    padding-right: 25px;
 }
 
 .infoList {
@@ -59,4 +60,5 @@ flex-direction: row;
     padding-top: 25px;
     padding-left: 25px;
     padding-bottom: 10px;
+    font-weight: bolder;
 }
